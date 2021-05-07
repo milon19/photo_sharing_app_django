@@ -31,28 +31,25 @@ class ProfileViewSet(viewsets.GenericViewSet, RetrieveModelMixin):
         serializer = ProfileSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # def update(self, request, *args, **kwargs):
-    #     partial = kwargs.pop("partial", False)
-    #     pk = kwargs["pk"]
-    #     instance = Profile.objects.get(id=pk)
-    #     data = request.data
-    #
-    #     profile_pic_file = data.get("profile_pic_file", None)
-    #     cover_pic_file = data.get("cover_pic_file", None)
-    #
-    #     profile_setup = True if data.get("profile_setup") == "true" else False
-    #
-    #     serializer = self.serializer_class(instance, data=data, partial=partial)
-    #     if serializer.is_valid():
-    #         serializer.save(
-    #             profile_setup=profile_setup,
-    #         )
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    # def partial_update(self, request, *args, **kwargs):
-    #     kwargs["partial"] = True
-    #     return self.update(request, *args, **kwargs)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        pk = kwargs["pk"]
+        instance = Profile.objects.get(id=pk)
+        data = request.data
+
+        profile_setup = True if data.get("profile_setup") == "true" else False
+
+        serializer = self.serializer_class(instance, data=data, partial=partial)
+        if serializer.is_valid():
+            serializer.save(
+                profile_setup=profile_setup,
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs["partial"] = True
+        return self.update(request, *args, **kwargs)
 
 
 class GetOwnProfile(APIView):
