@@ -30,6 +30,15 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, *args, **kwargs):
+        try:
+            this = Profile.objects.get(id=self.id)
+            if this.profile_pic != self.profile_pic:
+                this.profile_pic.delete(save=False)
+        except:
+            pass  # when new photo then we do nothing, normal case
+        super().save(*args, **kwargs)
+
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
