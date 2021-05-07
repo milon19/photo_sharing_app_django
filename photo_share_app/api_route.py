@@ -32,4 +32,5 @@ urlpatterns = [
 
     path("", include("core.urls", namespace='core')),
     path("", include("users.urls", namespace='users')),
+    path("", include("profiles.urls", namespace='profiles')),
 ]
