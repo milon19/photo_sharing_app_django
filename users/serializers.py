@@ -31,8 +31,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserWithProfileSerializer(serializers.ModelSerializer):
+    from albums.serializers import AlbumSerializer
+
     profile = ProfileSerializer(source="profile_user", read_only=True)
+    albums = AlbumSerializer(source="album_user", read_only=True, many=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "profile", ]
+        fields = ["id", "username", "email", "profile", "albums"]
