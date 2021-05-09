@@ -18,7 +18,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = ['id', 'user', 'title', 'cover', 'is_private', 'created_at', 'updated_at', 'photos', 'author']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     @staticmethod
     def get_author(obj):

@@ -14,7 +14,7 @@ from users.serializers import UserWithProfileSerializer
 User = get_user_model()
 
 
-class ProfileViewSet(viewsets.GenericViewSet, RetrieveModelMixin):
+class ProfileViewSet(viewsets.GenericViewSet, RetrieveModelMixin, UpdateModelMixin):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 

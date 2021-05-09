@@ -1,10 +1,43 @@
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from albums.serializers import AlbumSerializer
 from albums.models import Album
+
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    serializer_class = AlbumSerializer
+    queryset = Album.objects.all()
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super(AlbumViewSet, self).get_permissions()
+
+    def list(self, request, *args, **kwargs):
+        pass
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        data = request.data
+
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, *args, **kwargs):
+        pk = kwargs["pk"]
+        pass
+
+    def update(self, request, *args, **kwargs):
+       pass
+
 
 
 class GetOwnAlbum(APIView):
