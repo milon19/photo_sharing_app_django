@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from albums.serializers import AlbumSerializer
-from albums.models import Album
+from albums.serializers import AlbumSerializer, PhotoSerializer
+from albums.models import Album, Photo
 
 
 class AlbumViewSet(viewsets.ModelViewSet):
@@ -65,6 +65,26 @@ class GetOwnAlbum(APIView):
 
             serializer = self.serializer_class(qs)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
+class UploadPhoto(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PhotoSerializer
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            album_id = kwargs["id"]
+            data = request.data
+            album = Album.objects.filter(id=album_id).first()
+            serializer = self.serializer_class(data=data)
+            if serializer.is_valid():
+                serializer.save(album=album)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(
             {"detail": "Authentication credentials were not provided."},
             status=status.HTTP_401_UNAUTHORIZED,
