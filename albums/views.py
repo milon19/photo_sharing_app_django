@@ -36,8 +36,15 @@ class AlbumViewSet(viewsets.ModelViewSet):
         pass
 
     def update(self, request, *args, **kwargs):
-       pass
-
+        pk = kwargs["pk"]
+        instance = Album.objects.get(id=pk)
+        partial = kwargs.pop("partial", False)
+        data = request.data
+        serializer = self.serializer_class(instance, data=data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetOwnAlbum(APIView):
@@ -62,4 +69,3 @@ class GetOwnAlbum(APIView):
             {"detail": "Authentication credentials were not provided."},
             status=status.HTTP_401_UNAUTHORIZED,
         )
-
