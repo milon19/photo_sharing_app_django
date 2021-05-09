@@ -19,7 +19,9 @@ class AlbumViewSet(viewsets.ModelViewSet):
         return super(AlbumViewSet, self).get_permissions()
 
     def list(self, request, *args, **kwargs):
-        pass
+        qs = self.queryset.filter(is_private=False)
+        serializer = self.serializer_class(qs, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -33,7 +35,16 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         pk = kwargs["pk"]
-        pass
+        qs = self.queryset.filter(id=pk).first()
+
+        if qs.is_private:
+            return Response(
+                {"detail": "Authentication credentials were not provided."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        serializer = self.serializer_class(qs)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         pk = kwargs["pk"]
