@@ -192,3 +192,6 @@ CORS_ALLOW_METHODS = (
     'OPTIONS'
 )
 
+CORS_ORIGIN_WHITELIST = [
+    "https://photo-sharing-app-rest.herokuapp.com/"
+]
