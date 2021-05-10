@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn search_engine_qtec.wsgi --log-file -
+web: gunicorn photo_share_app.wsgi --log-file -
