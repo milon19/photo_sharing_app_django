@@ -170,4 +170,12 @@ SIMPLE_JWT = {
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r"^/api/.*$"
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r"http://localhost:*",
+    r"^https:\/\/.*\.herokuapp\.com",
+    r'https://photo-sharing-app-react.herokuapp.com/'
+]
